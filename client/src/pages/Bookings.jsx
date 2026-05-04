@@ -99,7 +99,7 @@ const Bookings = () => {
         placeholder="Search by worker or service..."
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        className="mb-4 w-full md:w-1/2 px-4 py-2 border rounded-lg"
+        className="input-search mb-4 w-full md:w-1/2"
       />
 
       {/* Status Filters */}
@@ -108,10 +108,8 @@ const Bookings = () => {
           <button
             key={status}
             onClick={() => setStatusFilter(status)}
-            className={`px-4 py-1 rounded-full text-sm border ${
-              statusFilter === status
-                ? "bg-blue-600 text-white"
-                : "bg-gray-100"
+            className={`btn-icon-toggle ${
+              statusFilter === status ? 'active' : 'inactive'
             }`}
           >
             {status}
@@ -132,7 +130,7 @@ const Bookings = () => {
           </p>
           <Link
             to="/services"
-            className="mt-4 inline-block bg-blue-600 text-white px-4 py-2 rounded"
+            className="btn-primary btn-primary-sm mt-4"
           >
             Find Services
           </Link>
@@ -174,7 +172,7 @@ const Bookings = () => {
                   <button
                     onClick={() => handleCancel(booking.id)}
                     disabled={actionLoading[booking.id]}
-                    className="text-red-600 hover:underline text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="btn-text-danger disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <span className={`btn-text ${actionLoading[booking.id] ? 'hidden' : ''}`}>Cancel</span>
                     <span className={`btn-loader ${actionLoading[booking.id] ? '' : 'hidden'}`}>Loading...</span>
@@ -184,7 +182,7 @@ const Bookings = () => {
                 {booking.status === "Completed" && !booking.review && (
                   <button
                     onClick={() => setActiveReview(booking.id)}
-                    className="text-blue-600 hover:underline text-sm"
+                    className="btn-text"
                   >
                     Leave Review
                   </button>
@@ -222,7 +220,8 @@ const Bookings = () => {
                     value={comment}
                     onChange={(e) => setComment(e.target.value)}
                     placeholder="Write your feedback..."
-                    className="w-full border rounded-lg p-2 text-sm mb-3"
+                    className="textarea-base mb-3"
+                    rows="3"
                   />
 
                   {/* Buttons */}
@@ -230,7 +229,7 @@ const Bookings = () => {
                     <button
                       onClick={() => handleReviewSubmit(booking.id)}
                       disabled={actionLoading[`review-${booking.id}`]}
-                      className="bg-blue-600 text-white px-3 py-1 rounded text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="btn-primary btn-primary-sm"
                     >
                       <span className={`btn-text ${actionLoading[`review-${booking.id}`] ? 'hidden' : ''}`}>Submit</span>
                       <span className={`btn-loader ${actionLoading[`review-${booking.id}`] ? '' : 'hidden'}`}>Loading...</span>
@@ -238,7 +237,7 @@ const Bookings = () => {
 
                     <button
                       onClick={() => setActiveReview(null)}
-                      className="text-gray-500 text-sm"
+                      className="btn-text"
                     >
                       Cancel
                     </button>

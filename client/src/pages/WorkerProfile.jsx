@@ -58,7 +58,7 @@ const WorkerProfile = () => {
         <div className="mt-8 pt-8">
           {/* TODO: Implement booking modal or redirect to a booking flow */}
           <button 
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded disabled:opacity-50 disabled:cursor-not-allowed"
+            className="btn-primary btn-primary-lg btn-full"
             onClick={handleBook}
             disabled={loading}
           >

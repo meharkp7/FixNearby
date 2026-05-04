@@ -124,13 +124,13 @@ const Services = () => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search by name or service (e.g. Electrician)..."
-              className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm transition"
+              className="input-search pl-10"
             />
           </div>
           {searchQuery && (
             <button
               onClick={() => setSearchQuery('')}
-              className="px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-medium transition"
+              className="btn-secondary"
             >
               Clear
             </button>
@@ -142,10 +142,8 @@ const Services = () => {
             <button
               key={cat}
               onClick={() => setCategoryFilter(cat)}
-              className={`px-5 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${
-                categoryFilter === cat
-                  ? 'bg-blue-600 text-white shadow-lg scale-105'
-                  : 'bg-white text-gray-600 border border-gray-200 hover:border-blue-400 hover:text-blue-600 shadow-sm'
+              className={`btn-icon-toggle ${
+                categoryFilter === cat ? 'active' : 'inactive'
               }`}
             >
               {cat !== "All" && iconMap[cat] && <span className="mr-2">{iconMap[cat]}</span>}
@@ -159,10 +157,8 @@ const Services = () => {
           <div className="flex justify-center">
             <button
               onClick={() => setSortByDistance(prev => !prev)}
-              className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold border transition-all duration-200 ${
-                sortByDistance
-                  ? 'bg-green-600 text-white border-green-600 shadow-lg'
-                  : 'bg-white text-gray-600 border-gray-200 hover:border-green-400 hover:text-green-600 shadow-sm'
+              className={`btn-icon-toggle ${
+                sortByDistance ? 'active' : 'inactive'
               }`}
             >
               <span>📍</span>
@@ -190,7 +186,7 @@ const Services = () => {
               setSearchQuery('');
               setCategoryFilter('All');
             }}
-            className="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg transition transform hover:scale-105"
+            className="btn-primary btn-primary-lg"
           >
             Reset All Filters
           </button>
