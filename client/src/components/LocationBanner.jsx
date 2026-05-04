@@ -1,5 +1,6 @@
 import { useLocation } from '../context/LocationContext';
 import { useState } from 'react';
+import useToast from '../hooks/useToast';
 
 /**
  * LocationBanner
@@ -12,13 +13,16 @@ import { useState } from 'react';
 const LocationBanner = () => {
   const { coords, loading, error, permissionDenied, retry } = useLocation();
   const [retryLoading, setRetryLoading] = useState(false);
+  const { showToast } = useToast();
 
   const handleRetry = async () => {
     setRetryLoading(true);
     try {
       await retry();
+      showToast('Location detected successfully!', 'success');
     } catch (error) {
       console.error('Retry failed:', error);
+      showToast('Failed to detect location. Please try again.', 'error');
     } finally {
       setRetryLoading(false);
     }

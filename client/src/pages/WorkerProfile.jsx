@@ -1,17 +1,21 @@
 import { useParams, Link } from 'react-router-dom';
 import { useState } from "react";
+import useToast from "../hooks/useToast";
 
 const WorkerProfile = () => {
   const { id } = useParams();
   const [loading, setLoading] = useState(false);
+  const { showToast } = useToast();
 
   const handleBook = async () => {
     setLoading(true);
     try {
       // TODO: Open booking form/modal
       await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
+      showToast('Booking request sent successfully!', 'success');
     } catch (error) {
       console.error('Booking failed:', error);
+      showToast('Failed to submit booking. Please try again.', 'error');
     } finally {
       setLoading(false);
     }

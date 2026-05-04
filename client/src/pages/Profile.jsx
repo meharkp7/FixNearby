@@ -1,15 +1,19 @@
 import { useState } from "react";
+import useToast from "../hooks/useToast";
 
 const Profile = () => {
   const [loading, setLoading] = useState(false);
+  const { showToast } = useToast();
 
   const handleSave = async () => {
     setLoading(true);
     try {
       // TODO: Handle API update logic
       await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
+      showToast('Profile updated successfully!', 'success');
     } catch (error) {
       console.error('Save failed:', error);
+      showToast('Failed to save changes. Please try again.', 'error');
     } finally {
       setLoading(false);
     }

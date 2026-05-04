@@ -1,7 +1,9 @@
 import { useState } from "react";
+import useToast from "../hooks/useToast";
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
+  const { showToast } = useToast();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -9,8 +11,10 @@ const Login = () => {
     try {
       // TODO: Add authentication logic and API connection
       await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
+      showToast('Login successful! Welcome back.', 'success');
     } catch (error) {
       console.error('Login failed:', error);
+      showToast('Login failed. Please try again.', 'error');
     } finally {
       setLoading(false);
     }

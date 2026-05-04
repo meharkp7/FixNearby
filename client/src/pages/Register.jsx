@@ -1,7 +1,9 @@
 import { useState } from "react";
+import useToast from "../hooks/useToast";
 
 const Register = () => {
   const [loading, setLoading] = useState(false);
+  const { showToast } = useToast();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -9,8 +11,10 @@ const Register = () => {
     try {
       // TODO: Add registration logic and API connection
       await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
+      showToast('Account created successfully!', 'success');
     } catch (error) {
       console.error('Registration failed:', error);
+      showToast('Registration failed. Please try again.', 'error');
     } finally {
       setLoading(false);
     }

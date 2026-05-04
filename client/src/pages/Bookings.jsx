@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import useToast from "../hooks/useToast";
 
 const Bookings = () => {
   const [bookings, setBookings] = useState([]);
@@ -8,6 +9,7 @@ const Bookings = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [actionLoading, setActionLoading] = useState({}); // For individual button loading
+  const { showToast } = useToast();
 
   // Review State
   const [activeReview, setActiveReview] = useState(null);
@@ -42,8 +44,10 @@ const Bookings = () => {
         b.id === id ? { ...b, status: "Cancelled" } : b
       );
       setBookings(updated);
+      showToast('Booking cancelled successfully.', 'success');
     } catch (error) {
       console.error('Cancel failed:', error);
+      showToast('Failed to cancel booking. Please try again.', 'error');
     } finally {
       setActionLoading(prev => ({ ...prev, [id]: false }));
     }
@@ -64,8 +68,10 @@ const Bookings = () => {
       setActiveReview(null);
       setRating(0);
       setComment("");
+      showToast('Review submitted successfully!', 'success');
     } catch (error) {
       console.error('Review submit failed:', error);
+      showToast('Failed to submit review. Please try again.', 'error');
     } finally {
       setActionLoading(prev => ({ ...prev, [`review-${id}`]: false }));
     }
