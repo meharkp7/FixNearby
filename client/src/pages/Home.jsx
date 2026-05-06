@@ -2,6 +2,11 @@ import { Link } from 'react-router-dom';
 import { useMemo } from 'react';
 import { useLocation } from '../context/LocationContext';
 import { getDistanceKm, formatDistance } from '../utils/distance';
+import { 
+  HiOutlineSearch as IconSearch, 
+  HiOutlineCalendar as IconCalendar, 
+  HiOutlineCheckCircle as IconCheckCircle 
+} from 'react-icons/hi';
 
 const ALL_WORKERS = [
   { id: 1,  name: "John Doe",      profession: "Electrician",      rating: 4.8, price: "$40/hr", mockOffset: { lat: 0.012,  lon: 0.008  } },
@@ -16,34 +21,24 @@ const ALL_WORKERS = [
   { id: 10, name: "Neha Gupta",    profession: "Pest Control",     rating: 4.5, price: "$40/hr", mockOffset: { lat: 0.025,  lon: -0.005 } },
 ];
 
-const categoryIconMap = {
-  Electrician: IconBolt,
-  Plumber: IconPipe,
-  Carpenter: IconSaw,
-  Cleaning: IconBroom,
-  Painting: IconBrush,
-  "AC Repair": IconSnowflake,
-  "Pest Control": IconBug,
-  Moving: IconBox,
+const iconMap = {
+  Electrician: "⚡",
+  Plumber: "🚰",
+  Carpenter: "🪵",
+  Painting: "🎨",
+  Cleaning: "🧹",
+  "AC Repair": "❄️",
+  "Pest Control": "🐜",
+  Moving: "📦",
+  Cleaner: "🧹",
+  "AC Technician": "❄️",
+  Mechanic: "🔧",
+  Gardener: "🌱",
+  "Appliance Repair": "🔌",
+  Painter: "🎨",
 };
 
-const workerIconMap = {
-  Electrician: IconBolt,
-  Plumber: IconPipe,
-  Carpenter: IconSaw,
-  Painter: IconBrush,
-  Cleaner: IconBroom,
-  "AC Technician": IconSnowflake,
-  Mechanic: IconSaw,
-  Gardener: IconBroom,
-  "Appliance Repair": IconBolt,
-  "Pest Control": IconBug,
-};
-
-const categoryIconMap = {
-  Electrician: "⚡", Plumber: "🚰", Carpenter: "🪵", Cleaning: "🧹",
-  Painting: "🎨", "AC Repair": "❄️", "Pest Control": "🐜", Moving: "📦",
-};
+const categoryIconMap = iconMap;
 
 const Home = () => {
   const { coords, loading: geoLoading, error: geoError } = useLocation();
@@ -151,36 +146,6 @@ const Home = () => {
         </div>
       </section>
 
-            <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4">
-              <Link
-                to="/services"
-                className="inline-flex items-center justify-center px-8 py-3 text-base font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 shadow-md hover:shadow-lg transition"
-              >
-                Browse Services
-              </Link>
-              <Link
-                to="/worker-register"
-                className="inline-flex items-center justify-center px-8 py-3 text-base font-medium rounded-lg text-blue-600 bg-white border border-gray-200 hover:bg-gray-50 shadow-sm hover:shadow-md transition"
-              >
-                <div className="flex flex-col items-center text-center gap-3">
-                  {CategoryIcon ? (
-                    <CategoryIcon className="h-12 w-12 sm:h-14 sm:w-14 text-slate-900 group-hover:text-[#0056D2] transition-colors" />
-                  ) : (
-                    <IconBolt className="h-12 w-12 sm:h-14 sm:w-14 text-slate-900 group-hover:text-[#0056D2] transition-colors" />
-                  )}
-                  <div className="font-semibold text-slate-900 text-base sm:text-lg">{category}</div>
-                </div>
-              </Link>
-            </div>
-
-            <div className="mt-6 flex justify-center gap-8 text-sm text-gray-500">
-              <div>✅ 10,000+ Users</div>
-              <div>✅ Verified Professionals</div>
-            </div>
-
-          </div>
-        </div>
-      </section>
 
       {/* Near You Section */}
       {(geoLoading || coords || geoError) && (
@@ -225,8 +190,7 @@ const Home = () => {
             )}
 
             {coords && nearbyWorkers.length > 0 && (
-              <>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                   {nearbyWorkers.map((worker) => (
                     <div
                       key={worker.id}
@@ -234,44 +198,33 @@ const Home = () => {
                     >
                       <div className="p-7 flex-1">
                         <div className="flex items-start justify-between mb-5">
-                          <div className="w-14 h-14 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center text-2xl shadow-inner group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
+                          <div className="w-14 h-14 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center text-2xl shadow-inner group-hover:bg-[#0056D2] group-hover:text-white transition-colors duration-300">
                             {iconMap[worker.profession] || '👷'}
                           </div>
                           <div className="flex items-center gap-1 text-xs font-bold text-green-700 bg-green-50 px-3 py-1.5 rounded-full border border-green-100">
                             📍 {formatDistance(worker.distanceKm)}
                           </div>
                         </div>
-                        <h3 className="text-xl font-bold text-gray-900 mb-0.5 group-hover:text-blue-600 transition-colors">{worker.name}</h3>
-                        <p className="text-blue-600 font-semibold text-sm mb-4">{worker.profession}</p>
-                        <div className="flex items-center gap-3 text-sm text-gray-600 bg-gray-50 p-3 rounded-lg">
+                        <h3 className="text-xl font-bold text-slate-900 mb-0.5 group-hover:text-[#0056D2] transition-colors">{worker.name}</h3>
+                        <p className="text-[#0056D2] font-semibold text-sm mb-4">{worker.profession}</p>
+                        <div className="flex items-center gap-3 text-sm text-slate-600 bg-slate-50 p-3 rounded-lg border border-slate-100">
                           <div className="flex items-center gap-1">
                             <span className="text-yellow-400">★</span>
-                            <span className="font-bold text-gray-900">{worker.rating}</span>
+                            <span className="font-bold text-slate-900">{worker.rating}</span>
                           </div>
-                          <div className="w-px h-4 bg-gray-300" />
-                          <div className="font-bold text-gray-900">{worker.price}</div>
+                          <div className="w-px h-4 bg-slate-300" />
+                          <div className="font-bold text-slate-900">{worker.price}</div>
                         </div>
                       </div>
-                      <h3 className="text-xl font-bold text-slate-900 mb-0.5 group-hover:text-[#0056D2] transition-colors">{worker.name}</h3>
-                      <p className="text-[#0056D2] font-semibold text-sm mb-4">{worker.profession}</p>
-                      <div className="flex items-center gap-3 text-sm text-slate-600 bg-slate-50 p-3 rounded-lg border border-slate-100">
-                        <div className="flex items-center gap-1">
-                          <span className="text-yellow-400">★</span>
-                          <span className="font-bold text-slate-900">{worker.rating}</span>
-                        </div>
-                        <div className="w-px h-4 bg-slate-300" />
-                        <div className="font-bold text-slate-900">{worker.price}</div>
+                      <div className="px-7 pb-7">
+                        <Link
+                          to={`/worker/${worker.id}`}
+                          className="block w-full text-center bg-slate-900 hover:bg-[#0056D2] text-white font-bold py-3.5 rounded-xl transition shadow-sm"
+                        >
+                          View &amp; Book
+                        </Link>
                       </div>
                     </div>
-                    <div className="px-7 pb-7">
-                      <Link
-                        to={`/worker/${worker.id}`}
-                        className="block w-full text-center bg-slate-900 hover:bg-[#0056D2] text-white font-bold py-3.5 rounded-xl transition shadow-sm"
-                      >
-                        View &amp; Book
-                      </Link>
-                    </div>
-                  </div>
                 ))}
               </div>
             )}
@@ -279,36 +232,6 @@ const Home = () => {
         </section>
       )}
 
-      {/* How It Works Section */}
-      <div className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-extrabold text-gray-900">How It Works</h2>
-            <p className="mt-4 text-lg text-gray-500">Get your tasks done in three simple steps.</p>
-          </div>
-
-          <div className="relative grid grid-cols-1 md:grid-cols-3 gap-10 text-center">
-            <div className="hidden md:block absolute top-1/2 left-0 w-full h-0.5 bg-gray-200"></div>
-
-            {[
-              { step: "1", title: "Search", desc: "Find nearby professionals based on skills, ratings, and location.", color: "blue" },
-              { step: "2", title: "Book",   desc: "Choose a time slot and confirm your booking instantly.",           color: "green" },
-              { step: "3", title: "Relax",  desc: "Sit back while the expert completes your task efficiently.",       color: "yellow" },
-            ].map((item) => (
-              <div key={item.step} className="relative p-8 border border-gray-100 rounded-2xl bg-white shadow-sm hover:shadow-xl transition group">
-                <div className={`absolute -top-4 left-1/2 transform -translate-x-1/2 bg-${item.color}-500 text-white text-sm px-3 py-1 rounded-full shadow`}>
-                  {item.step}
-                </div>
-                <div className={`w-14 h-14 bg-${item.color}-100 text-${item.color}-600 rounded-full flex items-center justify-center mx-auto mb-5 text-lg font-bold group-hover:scale-110 transition`}>
-                  {item.step}
-                </div>
-                <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
-                <p className="text-gray-500">{item.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
 
       {/* Popular Categories */}
       <div className="py-20 bg-gray-50">
