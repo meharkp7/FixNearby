@@ -44,6 +44,7 @@ const Services = () => {
   const [coords, setCoords] = useState(null);
 
   // ---------------- CATEGORY ----------------
+  // ---------------- CATEGORIES ----------------
 
   const categories = [
     "All",
@@ -229,6 +230,7 @@ const Services = () => {
   ]);
 
   // ---------------- PROCESS ----------------
+  // ---------------- PROCESS WORKERS ----------------
 
   const processedWorkers = useMemo(() => {
     let result = workers.map((w) => {
@@ -308,6 +310,71 @@ const Services = () => {
               🚀 Trusted Home Services
 
             </div>
+      {/* HEADER */}
+
+      <div className="text-center mb-12">
+
+        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900">
+          Find Trusted Skilled Professionals
+        </h1>
+
+        <p className="text-slate-600 mt-4 max-w-2xl mx-auto">
+          Compare pricing, ratings, experience and availability
+          before booking trusted local professionals.
+        </p>
+
+      </div>
+
+      {/* SEARCH + FILTER */}
+
+      <div className="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm mb-10">
+
+        <div className="flex flex-col lg:flex-row gap-4">
+
+          <input
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search electricians, plumbers..."
+            className="flex-1 px-5 py-3 border border-slate-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+
+          <select
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+            className="px-5 py-3 border border-slate-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="distance">Nearest</option>
+            <option value="rating">Top Rated</option>
+            <option value="price">Lowest Price</option>
+          </select>
+
+        </div>
+
+        {/* CATEGORY BUTTONS */}
+
+        <div className="flex flex-wrap gap-3 mt-6">
+
+          {categories.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setCategoryFilter(cat)}
+              className={`px-4 py-2 rounded-full text-sm border transition-all duration-300 ${
+                categoryFilter === cat
+                  ? "bg-blue-600 text-white border-blue-600 shadow-md"
+                  : "bg-white text-slate-700 border-slate-300 hover:border-blue-400 hover:text-blue-600"
+              }`}
+            >
+              {iconMap[cat] && (
+                <span className="mr-1">
+                  {iconMap[cat]}
+                </span>
+              )}
+
+              {cat}
+            </button>
+          ))}
+
+        </div>
 
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black leading-tight">
 
@@ -444,6 +511,268 @@ const Services = () => {
                 <h4 className="font-bold text-emerald-600">
                   80%
                 </h4>
+
+      {/* RESULTS */}
+
+      {!loading && (
+        <div className="flex items-center justify-between mb-6">
+
+          <p className="text-slate-600">
+            Showing{" "}
+            <span className="font-semibold text-slate-900">
+              {processedWorkers.length}
+            </span>{" "}
+            professionals
+          </p>
+
+        </div>
+      )}
+
+      {/* CONTENT */}
+
+      {loading ? (
+        <LoadingSpinner />
+      ) : processedWorkers.length === 0 ? (
+        <div className="text-center py-20">
+
+          <div className="text-6xl mb-4">
+            🔍
+          </div>
+
+          <h3 className="text-2xl font-bold text-slate-900">
+            No workers found
+          </h3>
+
+          <p className="text-slate-500 mt-2">
+            Try another search or category
+          </p>
+
+        </div>
+      ) : (
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(320px,1fr))] gap-7">
+
+          {processedWorkers.map((w) => (
+            <div
+              key={w.id}
+              className="group bg-white border border-slate-200 rounded-3xl p-6 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 flex flex-col"
+            >
+
+              {/* TOP */}
+
+              <div className="flex items-start justify-between">
+
+                <div>
+
+                  <div className="w-16 h-16 rounded-2xl bg-slate-100 flex items-center justify-center text-3xl mb-4 group-hover:scale-110 transition">
+                    {iconMap[w.profession]}
+                  </div>
+
+                  <h3 className="text-xl font-bold text-slate-900 flex items-center gap-2 flex-wrap">
+
+                    {w.name}
+
+                    {w.verified && (
+                      <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full">
+                        Verified
+                      </span>
+                    )}
+
+                  </h3>
+
+                  <p className="text-blue-600 font-medium mt-1">
+                    {w.profession}
+                  </p>
+
+                </div>
+
+                <div
+                  className={`text-xs px-3 py-1 rounded-full font-semibold ${
+                    w.available
+                      ? "bg-emerald-100 text-emerald-700"
+                      : "bg-red-100 text-red-600"
+                  }`}
+                >
+                  {w.available ? "Available" : "Busy"}
+                </div>
+
+              </div>
+
+              {/* STATS */}
+
+              <div className="grid grid-cols-2 gap-4 mt-6">
+
+                <div className="bg-slate-50 rounded-2xl p-4">
+                  <p className="text-xs text-slate-500 mb-1">
+                    Rating
+                  </p>
+
+                  <p className="font-bold text-slate-900">
+                    ⭐ {w.rating}
+                  </p>
+                </div>
+
+                <div className="bg-slate-50 rounded-2xl p-4">
+                  <p className="text-xs text-slate-500 mb-1">
+                    Price
+                  </p>
+
+                  <p className="font-bold text-slate-900">
+                    ${w.price}/hr
+                  </p>
+                </div>
+
+                <div className="bg-slate-50 rounded-2xl p-4">
+                  <p className="text-xs text-slate-500 mb-1">
+                    Experience
+                  </p>
+
+                  <p className="font-bold text-slate-900">
+                    {w.experience} Years
+                  </p>
+                </div>
+
+                <div className="bg-slate-50 rounded-2xl p-4">
+                  <p className="text-xs text-slate-500 mb-1">
+                    Jobs Done
+                  </p>
+
+                  <p className="font-bold text-slate-900">
+                    {w.completedJobs}+
+                  </p>
+                </div>
+
+              </div>
+
+              {/* EXTRA INFO */}
+
+              <div className="mt-5 space-y-3 text-sm">
+
+                <div className="flex items-center justify-between text-slate-600">
+                  <span>
+                    ⚡ Response Time
+                  </span>
+
+                  <span className="font-medium text-slate-900">
+                    {w.responseTime}
+                  </span>
+                </div>
+
+                {w.distanceKm && (
+                  <div className="flex items-center justify-between text-slate-600">
+
+                    <span>
+                      📍 Distance
+                    </span>
+
+                    <span className="font-medium text-emerald-600">
+                      {formatDistance(w.distanceKm)}
+                    </span>
+
+                  </div>
+                )}
+
+              </div>
+
+              {/* ACTION OUTCOME SECTION */}
+
+              <div className="mt-6 border-t border-slate-200 pt-5">
+
+                {/* BOOKING INFO */}
+
+                <div className="space-y-3 mb-5">
+
+                  <div className="flex items-center justify-between text-sm">
+
+                    <span className="text-slate-500">
+                      🚀 Booking Type
+                    </span>
+
+                    <span
+                      className={`font-semibold ${
+                        w.instantBooking
+                          ? "text-emerald-600"
+                          : "text-orange-500"
+                      }`}
+                    >
+                      {w.instantBooking
+                        ? "Instant Confirmation"
+                        : "Approval Required"}
+                    </span>
+
+                  </div>
+
+                  <div className="flex items-center justify-between text-sm">
+
+                    <span className="text-slate-500">
+                      ⏱ Arrival Time
+                    </span>
+
+                    <span className="font-semibold text-slate-900">
+                      {w.arrivalTime}
+                    </span>
+
+                  </div>
+
+                  <div className="flex items-center justify-between text-sm">
+
+                    <span className="text-slate-500">
+                      🛡 Service Warranty
+                    </span>
+
+                    <span className="font-semibold text-slate-900">
+                      {w.serviceWarranty}
+                    </span>
+
+                  </div>
+
+                  <div className="flex items-center justify-between text-sm">
+
+                    <span className="text-slate-500">
+                      📈 Success Rate
+                    </span>
+
+                    <span className="font-semibold text-emerald-600">
+                      {w.successRate}%
+                    </span>
+
+                  </div>
+
+                </div>
+
+                {/* CONFIDENCE BOX */}
+
+                <div className="bg-blue-50 border border-blue-100 rounded-2xl p-4 mb-5">
+
+                  <p className="text-sm text-slate-700 leading-relaxed">
+
+                    {w.instantBooking
+                      ? `Book now and get instant confirmation with expected arrival within ${w.arrivalTime}.`
+                      : `Worker will review your request before confirming the booking.`}
+
+                  </p>
+
+                </div>
+
+                {/* BUTTONS */}
+
+                <div className="grid grid-cols-2 gap-3">
+
+                  <button className="border border-slate-300 rounded-2xl py-3 font-medium hover:border-blue-500 hover:text-blue-600 transition">
+
+                    Chat Now
+
+                  </button>
+
+                  <Link
+                    to={`/worker/${w.id}`}
+                    className="bg-slate-900 text-white text-center py-3 rounded-2xl font-medium hover:bg-blue-600 transition"
+                  >
+                    {w.instantBooking
+                      ? "Book Instantly"
+                      : "Request Booking"}
+                  </Link>
+
+                </div>
 
               </div>
 
