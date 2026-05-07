@@ -12,14 +12,35 @@ const Register = () => {
     phone: "",
     password: "",
   });
+  
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [phoneError, setPhoneError] = useState("");
+  const [errors, setErrors] = useState({});
+  const [interacted, setInteracted] = useState({});
 
   // Indian phone number validation: 10 digits, starts with 6,7,8,9
   const validatePhoneNumber = (phone) => {
     const phoneRegex = /^[6-9]\d{9}$/;
     return phoneRegex.test(phone);
+  };
+
+  const validateFields = (name, value) => {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,}$/;
+    switch (name) {
+      case "name":
+        if (!value.trim()) return "Username is required";
+        break;
+      case "email":
+        if (!value || !emailRegex.test(value)) return "Invalid email address";
+        break;
+      case "password":
+        if (value.length < 6) return "Password must be at least 6 characters";
+        break;
+      default:
+        return "";
+    }
+    return "";
   };
 
   const handleChange = (e) => {
@@ -34,6 +55,19 @@ const Register = () => {
         setPhoneError("");
       }
     }
+
+    // Validate while typing only when user has interacted
+    if (interacted[name]) {
+      const errorMsgs = validateFields(name, value);
+      setErrors((prev) => ({ ...prev, [name]: errorMsgs }));
+    }
+  };
+
+  const handleBlur = (e) => {
+    const { name, value } = e.target;
+    setInteracted((prev) => ({ ...prev, [name]: true }));
+    const errorMsgs = validateFields(name, value);
+    setErrors((prev) => ({ ...prev, [name]: errorMsgs }));
   };
 
   const handleSubmit = async (e) => {
@@ -44,6 +78,20 @@ const Register = () => {
     // Validate phone number before submission
     if (!validatePhoneNumber(formData.phone)) {
       setPhoneError("Enter valid 10-digit mobile number starting with 6,7,8,9");
+      return;
+    }
+
+    // Validate all fields
+    const nameError = validateFields("name", formData.name);
+    const emailError = validateFields("email", formData.email);
+    const passwordError = validateFields("password", formData.password);
+
+    if (nameError || emailError || passwordError) {
+      setErrors({
+        name: nameError,
+        email: emailError,
+        password: passwordError,
+      });
       return;
     }
 
@@ -98,26 +146,44 @@ const Register = () => {
 
         <form className="mt-8 space-y-4" onSubmit={handleSubmit}>
           <div className="space-y-3">
-            <input
-              id="name"
-              name="name"
-              type="text"
-              required
-              value={formData.name}
-              onChange={handleChange}
-              placeholder="Full Name"
-              className="appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-            />
-            <input
-              id="email-address"
-              name="email"
-              type="email"
-              required
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="Email address"
-              className="appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-            />
+            <div>
+              <input
+                id="name"
+                name="name"
+                type="text"
+                required
+                value={formData.name}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                placeholder="Full Name"
+                className={`appearance-none relative block w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${
+                  errors.name && interacted.name ? "border-red-500" : "border-gray-300"
+                }`}
+              />
+              {errors.name && interacted.name && (
+                <p className="text-red-500 text-xs mt-1">{errors.name}</p>
+              )}
+            </div>
+
+            <div>
+              <input
+                id="email-address"
+                name="email"
+                type="email"
+                required
+                value={formData.email}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                placeholder="Email address"
+                className={`appearance-none relative block w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${
+                  errors.email && interacted.email ? "border-red-500" : "border-gray-300"
+                }`}
+              />
+              {errors.email && interacted.email && (
+                <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+              )}
+            </div>
+
             <div>
               <input
                 id="phone"
@@ -126,28 +192,36 @@ const Register = () => {
                 required
                 value={formData.phone}
                 onChange={handleChange}
+                onBlur={handleBlur}
                 placeholder="Mobile Number (10 digits)"
                 className={`appearance-none relative block w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${
                   phoneError ? "border-red-500" : "border-gray-300"
                 }`}
               />
-              {phoneError && (
-                <p className="text-red-500 text-xs mt-1">{phoneError}</p>
-              )}
+              {phoneError && <p className="text-red-500 text-xs mt-1">{phoneError}</p>}
               <p className="text-gray-400 text-xs mt-1">
                 Enter 10-digit mobile number starting with 6,7,8, or 9
               </p>
             </div>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              required
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="Password"
-              className="appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-            />
+
+            <div>
+              <input
+                id="password"
+                name="password"
+                type="password"
+                required
+                value={formData.password}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                placeholder="Password"
+                className={`appearance-none relative block w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${
+                  errors.password && interacted.password ? "border-red-500" : "border-gray-300"
+                }`}
+              />
+              {errors.password && interacted.password && (
+                <p className="text-red-500 text-xs mt-1">{errors.password}</p>
+              )}
+            </div>
           </div>
 
           <button
