@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import useToast from "../hooks/useToast";
+import EmptyState from "../components/EmptyState";
 
 const Bookings = () => {
   const [bookings, setBookings] = useState([]);
@@ -12,6 +13,13 @@ const Bookings = () => {
   const { showToast } = useToast();
 import { useState } from "react";
 
+const Bookings = () => {
+  const [bookings, setBookings] = useState([]);
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("All");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [actionLoading, setActionLoading] = useState({}); // For individual button loading
 const StarRating = ({ rating, onRatingChange, size = "md" }) => {
   const [hoverRating, setHoverRating] = useState(0);
 
@@ -114,6 +122,8 @@ const StarRating = ({ rating, onRatingChange, size = "md" }) => {
     } catch (error) {
       console.error('Cancel failed:', error);
       showToast('Failed to cancel booking. Please try again.', 'error');
+    } catch (error) {
+      console.error('Cancel failed:', error);
     } finally {
       setActionLoading(prev => ({ ...prev, [id]: false }));
     }
@@ -138,6 +148,8 @@ const StarRating = ({ rating, onRatingChange, size = "md" }) => {
     } catch (error) {
       console.error('Review submit failed:', error);
       showToast('Failed to submit review. Please try again.', 'error');
+    } catch (error) {
+      console.error('Review submit failed:', error);
     } finally {
       setActionLoading(prev => ({ ...prev, [`review-${id}`]: false }));
     }
@@ -357,6 +369,29 @@ const StarRating = ({ rating, onRatingChange, size = "md" }) => {
 
       </div>
 
+      {/* Empty State */}
+      {!loading && filteredBookings.length === 0 && (
+        <EmptyState
+          icon="📭"
+          title={
+            search || statusFilter !== "All"
+              ? "No bookings match your filters"
+              : "No bookings yet"
+          }
+          description={
+            search || statusFilter !== "All"
+              ? "Try adjusting your search or resetting filters to see your bookings."
+              : "Start by booking your first service and your bookings will appear here."
+          }
+          primaryAction={{ label: "Browse Services", to: "/services" }}
+          secondaryAction={{
+            label: "Reset filters",
+            onClick: () => {
+              setSearch("");
+              setStatusFilter("All");
+            },
+          }}
+        />
       {/* STATES */}
 
       {loading && (

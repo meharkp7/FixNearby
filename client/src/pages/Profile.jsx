@@ -5,6 +5,9 @@ const Profile = () => {
   const [loading, setLoading] = useState(false);
   const { showToast } = useToast();
 
+const Profile = () => {
+  const [loading, setLoading] = useState(false);
+
   const handleSave = async () => {
     setLoading(true);
     try {
@@ -14,6 +17,8 @@ const Profile = () => {
     } catch (error) {
       console.error('Save failed:', error);
       showToast('Failed to save changes. Please try again.', 'error');
+    } catch (error) {
+      console.error('Save failed:', error);
     } finally {
       setLoading(false);
     }

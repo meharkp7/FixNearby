@@ -16,6 +16,8 @@ const WorkerProfile = () => {
     } catch (error) {
       console.error('Booking failed:', error);
       showToast('Failed to submit booking. Please try again.', 'error');
+    } catch (error) {
+      console.error('Booking failed:', error);
     } finally {
       setLoading(false);
     }
