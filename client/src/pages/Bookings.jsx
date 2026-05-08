@@ -2,6 +2,13 @@ import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 
+const Bookings = () => {
+  const [bookings, setBookings] = useState([]);
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("All");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [actionLoading, setActionLoading] = useState({}); // For individual button loading
 const StarRating = ({ rating, onRatingChange, size = "md" }) => {
   const [hoverRating, setHoverRating] = useState(0);
 
@@ -91,6 +98,42 @@ const StarRating = ({ rating, onRatingChange, size = "md" }) => {
     setLoading(false);
   }, []);
 
+  const handleCancel = async (id) => {
+    setActionLoading(prev => ({ ...prev, [id]: true }));
+    try {
+      // TODO: API call to cancel booking
+      await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
+      const updated = bookings.map((b) =>
+        b.id === id ? { ...b, status: "Cancelled" } : b
+      );
+      setBookings(updated);
+    } catch (error) {
+      console.error('Cancel failed:', error);
+    } finally {
+      setActionLoading(prev => ({ ...prev, [id]: false }));
+    }
+  };
+
+  const handleReviewSubmit = async (id) => {
+    if (rating === 0) return alert("Please select a rating");
+
+    setActionLoading(prev => ({ ...prev, [`review-${id}`]: true }));
+    try {
+      // TODO: API call to submit review
+      await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
+      const updated = bookings.map((b) =>
+        b.id === id ? { ...b, review: { rating, comment } } : b
+      );
+
+      setBookings(updated);
+      setActiveReview(null);
+      setRating(0);
+      setComment("");
+    } catch (error) {
+      console.error('Review submit failed:', error);
+    } finally {
+      setActionLoading(prev => ({ ...prev, [`review-${id}`]: false }));
+    }
   // ---------------- SAVE BOOKINGS ----------------
 
   useEffect(() => {
@@ -452,6 +495,16 @@ const StarRating = ({ rating, onRatingChange, size = "md" }) => {
 
               </div>
 
+              {/* Actions */}
+              <div className="mt-3 flex gap-4">
+                {booking.status === "Pending" && (
+                  <button
+                    onClick={() => handleCancel(booking.id)}
+                    disabled={actionLoading[booking.id]}
+                    className="text-red-600 hover:underline text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <span className={`btn-text ${actionLoading[booking.id] ? 'hidden' : ''}`}>Cancel</span>
+                    <span className={`btn-loader ${actionLoading[booking.id] ? '' : 'hidden'}`}>Loading...</span>
               <div className="bg-slate-50 rounded-2xl p-4">
 
                 <p className="text-xs text-slate-500">
@@ -518,6 +571,16 @@ const StarRating = ({ rating, onRatingChange, size = "md" }) => {
 
             {/* REVIEW BOX */}
 
+                  {/* Buttons */}
+                  <div className="flex gap-3">
+                    <button
+                      onClick={() => handleReviewSubmit(booking.id)}
+                      disabled={actionLoading[`review-${booking.id}`]}
+                      className="bg-blue-600 text-white px-3 py-1 rounded text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      <span className={`btn-text ${actionLoading[`review-${booking.id}`] ? 'hidden' : ''}`}>Submit</span>
+                      <span className={`btn-loader ${actionLoading[`review-${booking.id}`] ? '' : 'hidden'}`}>Loading...</span>
+                    </button>
             {activeReview === b.id && (
               <div className="mt-6 bg-slate-50 border border-slate-200 rounded-3xl p-5">
 

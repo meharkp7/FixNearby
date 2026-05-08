@@ -1,4 +1,16 @@
 import { useState } from "react";
+
+const Register = () => {
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      // TODO: Add registration logic and API connection
+      await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
+    } catch (error) {
+      console.error('Registration failed:', error);
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
@@ -137,6 +149,9 @@ const Register = () => {
             Create an account
           </h2>
         </div>
+        {/* TODO: Add authentication logic and API connection */}
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+          <div className="rounded-md shadow-sm -space-y-px">
 
         {error && (
           <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md text-sm">
@@ -222,6 +237,12 @@ const Register = () => {
                 <p className="text-red-500 text-xs mt-1">{errors.password}</p>
               )}
             </div>
+          </div>
+          <div>
+            <button type="submit" disabled={loading} className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed">
+              <span className={`btn-text ${loading ? 'hidden' : ''}`}>Register</span>
+              <span className={`btn-loader ${loading ? '' : 'hidden'}`}>Loading...</span>
+            </button>
           </div>
 
           <button
