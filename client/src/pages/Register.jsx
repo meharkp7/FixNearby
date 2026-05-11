@@ -299,7 +299,6 @@ const Register = () => {
               ? "Creating your account..."
               : "Create account"}
           </button>
-          </div>
         </form>
 
         {/* Footer */}
