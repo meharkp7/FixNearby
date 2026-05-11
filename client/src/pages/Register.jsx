@@ -69,7 +69,7 @@ const Register = () => {
       [name]: value,
     }));
 
-    // Validate while typing after interaction
+    // validate while typing after first interaction
     if (interacted[name]) {
       const errorMsg = validateFields(name, value);
 
@@ -121,7 +121,7 @@ const Register = () => {
 
     setInteracted(allInteracted);
 
-    // Stop if validation errors exist
+    // stop if there are validation errors
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
@@ -133,16 +133,16 @@ const Register = () => {
   
     try {
       const userData = await signupUser({
-            name: formData.name,
-            email: formData.email,
-            phone: formData.phone,
-            password: formData.password,});
-
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        password: formData.password,
+      });
 
       login(userData);
       showToast("Registration successful! Welcome to FixNearby.");
 
-      setFormData({name:"", email:"",phone: "", password:""});
+      setFormData({ name: "", email: "", phone: "", password: "" });
       navigate("/dashboard");
     } catch(error) {
       setApiError(error.message || "Registration failed. Please try again.");
@@ -167,17 +167,16 @@ const Register = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4 py-10">
       <div className="w-full max-w-md bg-white rounded-3xl shadow-lg p-8">
+
         {/* Heading */}
         <div className="mb-8 text-center">
           <h2 className="text-3xl font-bold text-gray-900">
             Create an account
           </h2>
-
           <p className="mt-2 text-base sm:text-sm text-gray-600">
             Join FixNearby and get started
           </p>
         </div>
-  
 
         {apiError && (
           <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md text-sm">
@@ -186,9 +185,10 @@ const Register = () => {
         )}
 
         {/* Form */}
-         <form className="mt-8 space-y-4" onSubmit={handleSubmit}>
-          <div>
+        <form className="mt-8 space-y-4" onSubmit={handleSubmit}>
+
           {/* Name */}
+          <div>
             <input
               id="name"
               name="name"
@@ -200,19 +200,15 @@ const Register = () => {
               placeholder="Full Name"
               className={inputStyles("name")}
             />
-
-            {/* Reserved error space */}
             <div className="min-h-[22px] mt-1 text-sm">
               {interacted.name && errors.name && (
-                <span className="text-red-600">
-                  {errors.name}
-                </span>
+                <span className="text-red-600">{errors.name}</span>
               )}
             </div>
           </div>
-         
-          <div>
+
           {/* Email */}
+          <div>
             <input
               id="email-address"
               name="email"
@@ -224,17 +220,14 @@ const Register = () => {
               placeholder="Email Address"
               className={inputStyles("email")}
             />
-
             <div className="min-h-[22px] mt-1 text-sm">
               {interacted.email && errors.email && (
-                <span className="text-red-600">
-                  {errors.email}
-                </span>
+                <span className="text-red-600">{errors.email}</span>
               )}
             </div>
           </div>
 
-         {/* Phone */}
+          {/* Phone */}
           <div>
             <input
               id="phone"
@@ -246,17 +239,15 @@ const Register = () => {
               placeholder="Phone Number"
               className={inputStyles("phone")}
             />
-              {/* Error Reserved space */}        
-              <div className="min-h-[22px] mt-1 text-sm">
+            <div className="min-h-[22px] mt-1 text-sm">
               {interacted.phone && errors.phone && (
-                <span className="text-red-600">
-                  {errors.phone}
-                </span>
+                <span className="text-red-600">{errors.phone}</span>
               )}
             </div>
-          </div>  
+          </div>
+
           {/* Password */}
-            <div>
+          <div>
             <div className="relative">
               <input
                 id="password"
@@ -276,30 +267,23 @@ const Register = () => {
               >
                 {showPassword ? <FaEyeSlash /> : <FaEye />}
               </button>
-              </div>
-
-            {/* error reserved space */}
-          <div className="min-h-[22px] mt-1 text-sm">
+            </div>
+            <div className="min-h-[22px] mt-1 text-sm">
               {interacted.password && errors.password && (
-                <span className="text-red-600">
-                  {errors.password}
-                </span>
+                <span className="text-red-600">{errors.password}</span>
               )}
             </div>
           </div>
 
-         
           {/* Submit Button */}
           <button
             type="submit"
             disabled={loading}
             className="w-full mt-4 py-3 rounded-xl bg-blue-600 text-white font-medium hover:bg-blue-700 transition disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            {loading
-              ? "Creating your account..."
-              : "Create account"}
+            {loading ? "Creating your account..." : "Create account"}
           </button>
-          </div>
+
         </form>
 
         {/* Footer */}
