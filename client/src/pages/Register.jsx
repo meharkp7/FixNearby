@@ -185,7 +185,6 @@ const Register = () => {
 
         {/* Form */}
         <form className="mt-8 space-y-4" onSubmit={handleSubmit}>
-
           {/* Name */}
           <div>
             <input
@@ -294,7 +293,6 @@ const Register = () => {
             Sign in
           </Link>
         </p>
-
       </div>
     </div>
   );

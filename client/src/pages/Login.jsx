@@ -116,14 +116,13 @@ const Login = () => {
           Sign In
         </h2>
 
-         {apiError && (
+        {apiError && (
           <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md text-sm">
             {apiError}
           </div>
-        )} 
+        )}
 
         <form className="mt-8 space-y-4" onSubmit={handleSubmit}>
-          {/* Email */}
           <div>
             <input
               name="email"
@@ -135,17 +134,15 @@ const Login = () => {
               placeholder="Email address"
               className={inputStyles("email")}
             />
-             {/* Reserved error space */}
             <div className="min-h-[22px] mt-1 text-sm">
-              {interacted.email && errors.email && (<span className="text-red-600">
-                  {errors.email}
-                </span>
+              {interacted.email && errors.email && (
+                <span className="text-red-600">{errors.email}</span>
               )}
             </div>
-            </div>
-              
-              {/* Password */}
-            <div>
+          </div>
+
+          {/* Password */}
+          <div>
             <div className="relative">
               <input
                 name="password"
@@ -164,27 +161,27 @@ const Login = () => {
               >
                 {showPassword ? <FaEyeSlash /> : <FaEye />}
               </button>
-              </div>
+            </div>
             {/* Reserved error space */}
             <div className="min-h-[22px] mt-1 text-sm">
-              {interacted.password && errors.password && (<span className="text-red-600">
+              {interacted.password && errors.password && (
+                <span className="text-red-600">
                   {errors.password}
                 </span>
               )}
             </div>
-            </div>
-               {/* submit */}
+          </div>
           <button
             type="submit"
             disabled={loading}
             className="w-full py-3 px-4 text-white bg-blue-600 rounded-md hover:bg-blue-700 disabled:opacity-60 disabled:cursor-not-allowed transition"
           >
-            {loading ? "Signing you in…" : "Sign In"}
+            {loading ? 'Signing you in…' : 'Sign In'}
           </button>
-      </form>
+        </form>
 
         <p className="text-center text-sm text-gray-600">
-          Don&apos;t have an account?{"  "}
+          Don&apos;t have an account?{' '}
           <Link
             to="/register"
             className="text-blue-600 hover:underline font-semibold"
