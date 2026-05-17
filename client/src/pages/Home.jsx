@@ -304,10 +304,10 @@ const Home = () => {
               {/* Trust stats */}
               <div className="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-4">
                 {[
-                  { number: "10K+", label: "Customers" },
-                  { number: "500+", label: "Verified Pros" },
-                  { number: "24/7", label: "Support" },
-                  { number: "4.9★", label: "Rating" },
+                  { number: "10K+", label: t("stats.customers") },
+                  { number: "500+", label: t("stats.pros") },
+                  { number: "24/7", label: t("stats.support") },
+                  { number: "4.9★", label: t("stats.rating") },
                 ].map((item) => (
                   <div
                     key={item.label}
@@ -549,13 +549,13 @@ const Home = () => {
       {/* ── HOW IT WORKS ────────────────────────────────────────────────────── */}
       <section id="how-it-works" className="bg-white py-24">
         <div className="mx-auto max-w-7xl px-4 text-center">
-          <h2 className="mb-4 text-5xl font-extrabold text-slate-900">How it works</h2>
-          <p className="mb-16 text-lg text-slate-600">Three simple steps to get it done.</p>
+          <h2 className="mb-4 text-5xl font-extrabold text-slate-900">{t("howItWorks.title")}</h2>
+          <p className="mb-16 text-lg text-slate-600">{t("howItWorks.subtext")}</p>
           <div className="grid gap-14 md:grid-cols-3">
             {[
-              { step: "1", title: "Search and Select", desc: "Browse profiles and read reviews.",     IconComp: IconSearch      },
-              { step: "2", title: "Book Directly",      desc: "Schedule appointments instantly.",     IconComp: IconCalendar    },
-              { step: "3", title: "Relax and Enjoy",    desc: "Let the expert handle the job.",       IconComp: IconCheckCircle },
+              { step: "1", title: t("howItWorks.step1"), desc: t("howItWorks.step1desc"), IconComp: IconSearch },
+              { step: "2", title: t("howItWorks.step2"), desc: t("howItWorks.step2desc"), IconComp: IconCalendar },
+              { step: "3", title: t("howItWorks.step3"), desc: t("howItWorks.step3desc"), IconComp: IconCheckCircle },
             ].map((step) => (
               <div key={step.step} className="relative">
                 <div className="mx-auto mb-6 flex h-[92px] w-[92px] items-center justify-center rounded-full border border-slate-200 bg-white shadow-sm">
@@ -572,16 +572,14 @@ const Home = () => {
       {/* ── CTA ─────────────────────────────────────────────────────────────── */}
       <section className="bg-[#0056D2] py-20 text-center text-white">
         <div className="mx-auto max-w-3xl px-4">
-          <h2 className="mb-4 text-4xl font-extrabold">Need help today?</h2>
-          <p className="mb-8 text-lg text-white/80">
-            Book trusted professionals in minutes and get your home back on track.
-          </p>
+          <h2 className="mb-4 text-4xl font-extrabold">{t("cta.title")}</h2>
+          <p className="mb-8 text-lg text-white/80">{t("cta.subtext")}</p>
           <div className="flex flex-col justify-center gap-4 sm:flex-row">
             <Link to="/services" className="rounded-xl bg-white px-8 py-3 font-semibold text-[#0056D2] shadow-sm transition hover:bg-slate-100">
-              Find a Pro
+              {t("cta.findPro")}
             </Link>
             <Link to="/worker/register" className="rounded-xl border border-white/40 px-8 py-3 font-semibold text-white transition hover:bg-white/10">
-              Become a Pro
+              {t("cta.becomePro")}
             </Link>
           </div>
         </div>
