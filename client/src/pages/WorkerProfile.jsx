@@ -1,5 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useMemo, useState } from "react";
+import { getEstimatorConfig } from "../utils/estimatorConfig";
 import {
   Star,
   MapPin,
@@ -131,6 +132,80 @@ const WORKERS = {
       },
     ],
   },
+  4: {
+    id: 4,
+    name: "Maria Garcia",
+    profession: "Painter",
+    price: "$38/hr",
+    rating: 4.9,
+    experience: "12 Years",
+    location: "Florida, USA",
+    completedJobs: 275,
+    bio: "Professional painter with a decade of experience in residential interiors, color consulting, and premium finishes.",
+    portfolio: [
+      {
+        id: 1,
+        image: "https://images.unsplash.com/photo-1562259949-e8e7689d7828?w=400&h=250&fit=crop",
+        description: "Full interior repaint for a 4-bedroom family home",
+        completionDate: "March 2025",
+        customerRating: 5.0,
+        review: "Flawless finish, completed on time and under budget!",
+      },
+      {
+        id: 2,
+        image: "https://images.unsplash.com/photo-1581858726788-75bc0f6a952d?w=400&h=250&fit=crop",
+        description: "Feature wall accent painting with textured design",
+        completionDate: "January 2025",
+        customerRating: 4.9,
+        review: "Absolutely stunning. Maria has a great eye for color.",
+      },
+      {
+        id: 3,
+        image: "https://images.unsplash.com/photo-1572297773977-c6ce2cff0e1e?w=400&h=250&fit=crop",
+        description: "Kitchen and dining area refresh with semi-gloss finish",
+        completionDate: "November 2024",
+        customerRating: 4.8,
+        review: "Very tidy and professional. Will hire again!",
+      },
+    ],
+  },
+  5: {
+    id: 5,
+    name: "Sarah Lee",
+    profession: "Cleaner",
+    price: "$28/hr",
+    rating: 4.7,
+    experience: "5 Years",
+    location: "Seattle, USA",
+    completedJobs: 320,
+    bio: "Reliable and thorough home cleaning specialist with expertise in deep cleaning, move-in/out cleans, and eco-friendly products.",
+    portfolio: [
+      {
+        id: 1,
+        image: "https://images.unsplash.com/photo-1563453392212-326f5e854473?w=400&h=250&fit=crop",
+        description: "Complete move-out deep clean for a 3-bedroom apartment",
+        completionDate: "April 2025",
+        customerRating: 5.0,
+        review: "Left the apartment spotless. Got our full deposit back!",
+      },
+      {
+        id: 2,
+        image: "https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?w=400&h=250&fit=crop",
+        description: "Weekly recurring home cleaning service",
+        completionDate: "March 2025",
+        customerRating: 4.7,
+        review: "Consistently excellent work, very dependable.",
+      },
+      {
+        id: 3,
+        image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=250&fit=crop",
+        description: "Post-renovation cleanup for a renovated kitchen",
+        completionDate: "January 2025",
+        customerRating: 4.8,
+        review: "Handled all the construction dust and debris perfectly.",
+      },
+    ],
+  },
 };
 
 const REVIEWS = [
@@ -152,10 +227,10 @@ const REVIEWS = [
 ];
 
 const TABS = [
-  { id: "overview",  label: "Overview",     icon: LayoutGrid   },
-  { id: "estimator", label: "Get Estimate", icon: Calculator   },
-  { id: "reviews",   label: "Reviews",      icon: MessageSquare },
-  { id: "portfolio", label: "Portfolio",    icon: Image        },
+  { id: "overview", label: "Overview", icon: LayoutGrid },
+  { id: "estimator", label: "Get Estimate", icon: Calculator },
+  { id: "reviews", label: "Reviews", icon: MessageSquare },
+  { id: "portfolio", label: "Portfolio", icon: Image },
 ];
 
 const getBookings = () => {
@@ -174,9 +249,10 @@ const WorkerProfile = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const [activeTab, setActiveTab]       = useState("overview");
-  const [showModal, setShowModal]       = useState(false);
+  const [activeTab, setActiveTab]          = useState("overview");
+  const [showModal, setShowModal]           = useState(false);
   const [bookingDetails, setBookingDetails] = useState({});
+  const [showQuickBookPrompt, setShowQuickBookPrompt] = useState(false);
 
   /* ✅ Safe worker lookup */
   const worker = useMemo(() => {
@@ -184,9 +260,26 @@ const WorkerProfile = () => {
     return WORKERS[workerId] || null;
   }, [id]);
 
-  /* ── Quick book (no estimate) ── */
+  /* Detect whether this profession has an estimator config */
+  const hasEstimator = useMemo(
+    () => worker && getEstimatorConfig(worker.profession) !== null,
+    [worker]
+  );
+
+  /* ── Quick book — show estimate prompt if config exists, else book directly ── */
   const handleBooking = () => {
     if (!worker) return;
+    if (hasEstimator) {
+      setShowQuickBookPrompt(true);
+      return;
+    }
+    confirmQuickBook();
+  };
+
+  /* ── Confirmed quick book (no estimate) ── */
+  const confirmQuickBook = () => {
+    if (!worker) return;
+    setShowQuickBookPrompt(false);
 
     const newBooking = {
       id: "BK-" + Math.random().toString(36).slice(2, 8).toUpperCase(),
@@ -290,7 +383,7 @@ const WorkerProfile = () => {
         <div className="lg:col-span-1">
           <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-6 sticky top-6">
 
-           {/* Avatar */}
+            {/* Avatar */}
             <div className="flex flex-col items-center text-center">
               <div className="w-28 h-28 rounded-full bg-blue-100 flex items-center justify-center text-4xl font-bold text-blue-700">
                 {worker.name.charAt(0)}
@@ -326,15 +419,29 @@ const WorkerProfile = () => {
               </div>
             </div>
 
+            {/* Smart Estimate Badge */}
+            {hasEstimator && (
+              <div className="mt-6 flex items-center justify-center gap-2 bg-emerald-50 border border-emerald-200 rounded-2xl py-2.5 px-4">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="text-xs font-semibold text-emerald-700">
+                  Smart Estimate Available
+                </span>
+              </div>
+            )}
+
             {/* Price */}
-            <div className="mt-8 bg-blue-50 rounded-2xl p-5 text-center">
+            <div className="mt-4 bg-blue-50 rounded-2xl p-5 text-center">
               <p className="text-sm text-gray-500">
                 Starting From
               </p>
-
               <h2 className="text-3xl font-bold text-blue-700 mt-1">
                 {worker.price}
               </h2>
+              {hasEstimator && (
+                <p className="text-xs text-emerald-600 mt-1.5 font-medium">
+                  Use Smart Estimator for exact pricing
+                </p>
+              )}
             </div>
 
             {/* CTA */}
@@ -345,14 +452,35 @@ const WorkerProfile = () => {
               Quick Book
             </button>
 
-            {/* Estimate CTA shortcut */}
-            <button
-              onClick={() => setActiveTab("estimator")}
-              className="w-full mt-3 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-700 font-semibold py-3 rounded-2xl transition flex items-center justify-center gap-2"
-            >
-              <Calculator size={16} />
-              Get Smart Estimate
-            </button>
+            {/* Inline estimate prompt — shown after Quick Book tap */}
+            {showQuickBookPrompt && (
+              <div className="mt-3 rounded-2xl border border-amber-200 bg-amber-50 p-4 animate-slide-up">
+                <p className="text-sm font-semibold text-amber-800 mb-1">
+                  Want to know the exact cost first?
+                </p>
+                <p className="text-xs text-amber-600 mb-3">
+                  Use the Smart Estimator to get a transparent breakdown before booking.
+                </p>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => {
+                      setShowQuickBookPrompt(false);
+                      setActiveTab("estimator");
+                    }}
+                    className="flex-1 bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-semibold py-2 rounded-xl transition flex items-center justify-center gap-1"
+                  >
+                    <Calculator size={13} />
+                    Get Estimate
+                  </button>
+                  <button
+                    onClick={confirmQuickBook}
+                    className="flex-1 bg-white hover:bg-gray-50 border border-gray-200 text-gray-700 text-xs font-semibold py-2 rounded-xl transition"
+                  >
+                    Skip, Book Now
+                  </button>
+                </div>
+              </div>
+            )}
 
             {/* Contact */}
             <div className="flex gap-3 mt-4">
@@ -382,11 +510,10 @@ const WorkerProfile = () => {
                   key={tab.id}
                   id={`tab-${tab.id}`}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 ${
-                    isActive
+                  className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 ${isActive
                       ? "bg-blue-600 text-white shadow-md"
                       : "text-gray-500 hover:bg-gray-50 hover:text-gray-800"
-                  }`}
+                    }`}
                 >
                   <Icon size={15} />
                   <span className="hidden sm:inline">{tab.label}</span>

@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import LoadingSpinner from "../components/LoadingSpinner";
 import StarRating from "../components/StarRating";
-import { Package, Clock, DollarSign, ChevronDown, ChevronUp } from "lucide-react";
+import { Package, Clock, DollarSign, ChevronDown, ChevronUp, Zap } from "lucide-react";
 
 const demoBookings = [
   {
@@ -46,6 +46,10 @@ const statusStyle = (status) => {
 /* ── Estimate breakdown panel for a booking card ── */
 const EstimateBreakdown = ({ specs }) => {
   const [open, setOpen] = useState(false);
+  const total = specs.totalCost || 1;
+  const matPct = Math.round((specs.materialCost / total) * 100);
+  const labPct = 100 - matPct;
+
   return (
     <div className="mt-4 rounded-xl border border-emerald-100 bg-emerald-50 overflow-hidden">
       <button
@@ -64,8 +68,24 @@ const EstimateBreakdown = ({ specs }) => {
           : <ChevronDown size={14} className="text-emerald-600" />}
       </button>
 
-      {/* Summary always visible */}
-      <p className="px-4 pb-2.5 text-xs text-emerald-700 font-medium">{specs.summary}</p>
+      {/* Summary pill always visible */}
+      <div className="px-4 pb-2">
+        <code className="text-xs text-emerald-800 font-mono bg-emerald-100 px-2.5 py-1 rounded-lg">
+          {specs.summary}
+        </code>
+      </div>
+
+      {/* Cost split bar always visible */}
+      <div className="px-4 pb-2.5">
+        <div className="flex justify-between text-[10px] text-emerald-600 mb-1">
+          <span>Materials {matPct}%</span>
+          <span>Labor {labPct}%</span>
+        </div>
+        <div className="cost-bar-track flex">
+          <div className="cost-bar-fill bg-blue-400" style={{ width: `${matPct}%` }} />
+          <div className="cost-bar-fill bg-amber-400" style={{ width: `${labPct}%` }} />
+        </div>
+      </div>
 
       {/* Full breakdown */}
       {open && (
@@ -270,16 +290,33 @@ const pendingBookings = bookings.filter(
             >
               <div className="flex items-start justify-between">
                 <div>
-                  <h3 className="text-lg font-semibold text-slate-800">
-                    {booking.service}
-                  </h3>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <h3 className="text-lg font-semibold text-slate-800">
+                      {booking.service}
+                    </h3>
+                    {/* Smart Estimate badge */}
+                    {booking.estimateSpecs && (
+                      <span className="inline-flex items-center gap-1 bg-emerald-50 border border-emerald-200 text-emerald-700 text-[11px] font-semibold px-2 py-0.5 rounded-full">
+                        <Zap size={10} className="fill-emerald-500 text-emerald-500" />
+                        Smart Estimate
+                      </span>
+                    )}
+                  </div>
                   <p className="text-slate-600">{booking.worker}</p>
                 </div>
-                <span
-                  className={`rounded-full px-3 py-1 text-xs font-semibold ${statusStyle(booking.status)}`}
-                >
-                  {booking.status}
-                </span>
+                <div className="flex flex-col items-end gap-1">
+                  <span
+                    className={`rounded-full px-3 py-1 text-xs font-semibold ${statusStyle(booking.status)}`}
+                  >
+                    {booking.status}
+                  </span>
+                  {/* Show estimated total prominently */}
+                  {booking.estimateSpecs && (
+                    <span className="text-sm font-bold text-emerald-600">
+                      ${booking.estimateSpecs.totalCost.toFixed(2)}
+                    </span>
+                  )}
+                </div>
               </div>
 
               <div className="mt-3 flex flex-wrap justify-between gap-2 text-sm text-slate-500">

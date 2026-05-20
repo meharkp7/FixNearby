@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Package, Clock, DollarSign, ChevronDown, ChevronUp } from "lucide-react";
+import { Package, Clock, DollarSign, ChevronDown, ChevronUp, CheckCircle2 } from "lucide-react";
 
 const BookingConfirmationModal = ({ isOpen, onClose, bookingDetails }) => {
   const [showBreakdown, setShowBreakdown] = useState(false);
@@ -8,6 +8,10 @@ const BookingConfirmationModal = ({ isOpen, onClose, bookingDetails }) => {
   if (!isOpen) return null;
 
   const specs = bookingDetails?.estimateSpecs;
+  const matPct = specs
+    ? Math.round((specs.materialCost / specs.totalCost) * 100)
+    : 0;
+  const labPct = 100 - matPct;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 px-4">
@@ -29,10 +33,17 @@ const BookingConfirmationModal = ({ isOpen, onClose, bookingDetails }) => {
           <h2 className="text-2xl font-bold text-center text-gray-800 mb-1">
             Booking Confirmed! 🎉
           </h2>
+
+          {/* Smart Estimate Locked badge */}
           {specs && (
-            <p className="text-center text-sm text-emerald-600 font-medium mb-4">
-              Smart Estimate Locked In
-            </p>
+            <div className="flex items-center justify-center gap-2 mt-2 mb-4">
+              <div className="flex items-center gap-1.5 bg-emerald-50 border border-emerald-200 rounded-full px-4 py-1.5 shadow-sm">
+                <CheckCircle2 size={13} className="text-emerald-600" />
+                <span className="text-xs font-semibold text-emerald-700">
+                  Smart Estimate Locked In
+                </span>
+              </div>
+            </div>
           )}
 
           {/* Core booking details */}
@@ -82,9 +93,23 @@ const BookingConfirmationModal = ({ isOpen, onClose, bookingDetails }) => {
                 }
               </button>
 
-              {/* Summary line always visible */}
+              {/* Summary pill always visible */}
               <div className="px-4 pb-3">
-                <p className="text-xs text-emerald-700 font-medium">{specs.summary}</p>
+                <code className="text-xs text-emerald-800 font-mono bg-emerald-100 px-2.5 py-1 rounded-lg">
+                  {specs.summary}
+                </code>
+              </div>
+
+              {/* Cost split bar always visible */}
+              <div className="px-4 pb-3">
+                <div className="flex justify-between text-xs text-emerald-600 mb-1">
+                  <span>Materials {matPct}%</span>
+                  <span>Labor {labPct}%</span>
+                </div>
+                <div className="cost-bar-track flex">
+                  <div className="cost-bar-fill bg-blue-400" style={{ width: `${matPct}%` }} />
+                  <div className="cost-bar-fill bg-amber-400" style={{ width: `${labPct}%` }} />
+                </div>
               </div>
 
               {/* Full breakdown (collapsible) */}
