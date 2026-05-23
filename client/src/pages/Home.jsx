@@ -255,46 +255,113 @@ const Home = () => {
     <div className="bg-white">
 
       {/* ── HERO ────────────────────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden bg-white">
-        <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
-          <div className="relative pb-[260px] sm:pb-[220px] lg:pb-[180px]">
-            <div className="relative overflow-hidden rounded-[36px] shadow-[0_18px_40px_rgba(15,23,42,0.18)]">
-              <div className="relative h-[320px] sm:h-[380px] lg:h-[420px]">
+      <section className="relative overflow-hidden bg-gradient-to-b from-slate-50 via-white to-white">
+        {/* Background decoration */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute -top-24 -left-24 h-72 w-72 rounded-full bg-blue-100 blur-3xl opacity-60" />
+          <div className="absolute bottom-0 right-0 h-96 w-96 rounded-full bg-violet-100 blur-3xl opacity-50" />
+        </div>
+
+        <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
+          <div className="grid items-center gap-14 lg:grid-cols-2">
+
+            {/* LEFT CONTENT */}
+            <div className="max-w-2xl">
+
+              {/* Trust badge */}
+              <div className="inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700 shadow-sm">
+                <span className="h-2 w-2 rounded-full bg-blue-500 animate-pulse" />
+                Trusted by 10,000+ homeowners
+              </div>
+
+              {/* Main heading */}
+              <h1 className="mt-6 text-5xl font-extrabold leading-[1.05] tracking-tight text-slate-900 sm:text-6xl lg:text-7xl">
+                {t("heroTitle")}
+              </h1>
+
+              {/* Subtitle */}
+              <p className="mt-6 max-w-xl text-lg leading-8 text-slate-600 sm:text-xl">
+                {t("hero.subtext")}
+              </p>
+
+              {/* CTA buttons */}
+              <div className="mt-10 flex flex-col gap-4 sm:flex-row">
+                <Link
+                  to="/services"
+                  className="inline-flex items-center justify-center rounded-xl bg-[#0056D2] px-8 py-4 text-base font-bold text-white shadow-lg shadow-blue-200 transition-all duration-300 hover:-translate-y-1 hover:bg-[#0047AF]"
+                >
+                  {t("hero.findPro") || "Find a Pro"}
+                </Link>
+
+                <Link
+                  to="/worker/register"
+                  className="inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-8 py-4 text-base font-bold text-slate-800 transition-all duration-300 hover:-translate-y-1 hover:border-slate-400 hover:bg-slate-50"
+                >
+                  {t("hero.becomePro") || "Become a Pro"}
+                </Link>
+              </div>
+
+              {/* Trust stats */}
+              <div className="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-4">
+                {[
+                  { number: "10K+", label: "Customers" },
+                  { number: "500+", label: "Verified Pros" },
+                  { number: "24/7", label: "Support" },
+                  { number: "4.9★", label: "Rating" },
+                ].map((item) => (
+                  <div
+                    key={item.label}
+                    className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm backdrop-blur"
+                  >
+                    <div className="text-2xl font-extrabold text-slate-900">
+                      {item.number}
+                    </div>
+                    <p className="mt-1 text-sm font-medium text-slate-500">
+                      {item.label}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+            {/* RIGHT IMAGE SECTION */}
+            <div className="relative mt-12 lg:mt-0" style={{ padding: '24px 20px 28px' }}>
+
+              {/* Main image */}
+              <div className="relative overflow-hidden rounded-[28px] border border-slate-200 shadow-2xl">
+                <div className="absolute inset-0 bg-gradient-to-tr from-slate-900/30 via-slate-900/08 to-transparent z-10" />
                 <img
                   src="/hero-section.png"
                   alt="Home service professional"
-                  className="absolute inset-0 h-full w-full object-cover"
+                  className="h-[420px] w-full object-cover sm:h-[520px]"
                   loading="eager"
                 />
               </div>
-            </div>
 
-            <div className="absolute inset-0 bg-black/50 flex items-center justify-center text-center">
-              <div className="text-white max-w-3xl px-6">
-                <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight tracking-tight">
-                  {t("heroTitle")}
-                </h1>
-              </div>
-            </div>
-
-            <div className="absolute left-1/2 top-[180px] w-full -translate-x-1/2 px-5 sm:top-[220px] sm:px-8 lg:top-[250px]">
-              <div className="mx-auto w-full max-w-[560px] lg:max-w-[720px] rounded-2xl border border-slate-200 bg-white/95 px-7 py-7 text-center shadow-[0_14px_32px_rgba(15,23,42,0.18)] backdrop-blur sm:px-10 sm:py-9">
-                <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700">
-                  Trusted by 10,000+ homeowners
+              {/* Floating rating card — top-left, outside the frame */}
+              <div className="absolute -top-5 -left-4 rounded-2xl border border-white/50 bg-white/95 p-4 shadow-xl backdrop-blur-md z-20 animate-float">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-amber-100 flex-shrink-0">
+                    <IconStar className="h-5 w-5 text-amber-500" filled />
+                  </div>
+                  <div>
+                    <div className="text-base font-extrabold text-slate-900">4.9/5 Rating</div>
+                    <p className="text-xs text-slate-500">Based on reviews</p>
+                  </div>
                 </div>
-                <h2 className="text-3xl font-extrabold leading-tight tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
-                  {t("hero.headline")}
-                </h2>
-                <p className="mt-6 text-lg leading-relaxed text-slate-600 sm:text-xl">
-                  {t("hero.subtext")}
-                </p>
-                <div className="mt-8 flex items-center justify-center gap-3">
-                  <Link to="/services" className="inline-flex items-center justify-center rounded-lg bg-[#0056D2] px-5 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-[#0047AF]">
-                    {t("hero.findPro") || "Find a Pro"}
-                  </Link>
-                  <Link to="/worker/register" className="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2 text-sm font-semibold text-slate-800 transition hover:bg-slate-50">
-                    {t("hero.becomePro") || "Become a Pro"}
-                  </Link>
+              </div>
+
+              {/* Floating quick booking card — bottom-right, outside the frame */}
+              <div className="absolute -bottom-5 -right-4 rounded-2xl border border-white/50 bg-white/95 p-4 shadow-xl backdrop-blur-md z-20 max-w-[220px] animate-float-b">
+                <div className="flex items-start gap-3">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-100 flex-shrink-0">
+                    <IconBolt className="h-5 w-5 text-emerald-600" />
+                  </div>
+                  <div>
+                    <div className="text-base font-extrabold text-slate-900">Quick Booking</div>
+                    <p className="mt-0.5 text-xs leading-5 text-slate-500">
+                      Connect with trusted professionals in minutes.
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -302,22 +369,6 @@ const Home = () => {
         </div>
       </section>
 
-      {/* ── STATS ───────────────────────────────────────────────────────────── */}
-      <section className="py-20 bg-slate-50">
-        <div className="mx-auto max-w-7xl px-4 grid grid-cols-2 gap-6 md:grid-cols-4">
-          {[
-            { number: "10K+", label: "Happy Customers" },
-            { number: "500+", label: "Verified Pros" },
-            { number: "24/7", label: "Support" },
-            { number: "4.9/5", label: "Rating" },
-          ].map((item) => (
-            <div key={item.label} className="rounded-3xl border border-slate-200 bg-white p-8 text-center shadow-sm transition hover:shadow-xl">
-              <div className="text-4xl font-extrabold text-slate-900">{item.number}</div>
-              <p className="mt-2 font-medium text-slate-500">{item.label}</p>
-            </div>
-          ))}
-        </div>
-      </section>
 
       {/* ── CLOSEST WORKERS ─────────────────────────────────────────────────── */}
       {(geoLoading || coords || geoError) && (
