@@ -136,9 +136,24 @@
   50% { transform: translateY(-10px); }
 }
 
+@keyframes floatB {
+  0%, 100% { transform: translateY(-4px); }
+  50% { transform: translateY(6px); }
+}
+
 .animate-float {
   animation: float 3s ease-in-out infinite;
 }
+
+.animate-float-b {
+  animation: floatB 4.2s ease-in-out infinite;
+}
+
+.animate-float:hover,
+.animate-float-b:hover {
+  animation-play-state: paused;
+}
+
 
 .spinner-slow {
   animation: spin 1.5s linear infinite;
